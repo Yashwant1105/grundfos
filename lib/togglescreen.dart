@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:grundfos/home_page.dart';
 import 'package:grundfos/screens/welcome.dart'; // Import the welcome screen
 
-class Quiz extends StatefulWidget {
-  const Quiz({super.key});
+class Togglescreen extends StatefulWidget {
+  const Togglescreen({super.key});
 
   @override
-  State<Quiz> createState() {
-    return _QuizState();
+  State<Togglescreen> createState() {
+    return _TogglescreenState();
   }
 }
 
-class _QuizState extends State<Quiz> {
+class _TogglescreenState extends State<Togglescreen> {
   List<String> selectedAnswers = [];
   var activeScreen = 'start_screen';
 
