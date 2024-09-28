@@ -87,7 +87,8 @@ class TwinklingImage extends StatefulWidget {
   final double height;
   final double width;
 
-  const TwinklingImage({super.key, 
+  const TwinklingImage({
+    super.key,
     required this.imageUrl,
     required this.height,
     required this.width,

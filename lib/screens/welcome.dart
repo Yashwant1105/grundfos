@@ -451,7 +451,7 @@ class _FadeInTransitionState extends State<FadeInTransition>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 50),
       vsync: this,
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
@@ -480,43 +480,46 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Center(
-      child: Container(
-        width: screenWidth,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(color: Color(0xFF0C2229)),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 25),
-              _buildWelcomeRow(),
-              const SizedBox(height: 20),
-              _buildDescriptionText(),
-              const SizedBox(height: 50),
-              _buildCard(
-                title: 'Our Dataset Visualization',
-                description:
-                    'Using the collection of more than 30k datasets of chiller plant running data, we are trying to visualize the chiller plant usage variation throughout the whole year.',
-                buttonText: 'Show Table',
-                onPressed: () {},
-              ),
-              const SizedBox(height: 50),
-              _buildCard(
-                title: 'Predict Chiller Load',
-                description:
-                    'This feature allows you to retrieve the suggested energy load of chiller plants in real-time. By analyzing various input parameters such as current relative humidity, total plant power, plant efficiency, etc, the system provides an accurate prediction of the chiller load needed for optimal performance.',
-                buttonText: 'Predict',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const InputScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 50),
-            ],
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          width: screenWidth,
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(color: Color(0xFF0C2229)),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 25),
+                _buildWelcomeRow(),
+                const SizedBox(height: 20),
+                _buildDescriptionText(),
+                const SizedBox(height: 50),
+                _buildCard(
+                  title: 'Our Dataset Visualization',
+                  description:
+                      'Using the collection of more than 30k datasets of chiller plant running data, we are trying to visualize the chiller plant usage variation throughout the whole year.',
+                  buttonText: 'Show Table',
+                  onPressed: () {},
+                ),
+                const SizedBox(height: 50),
+                _buildCard(
+                  title: 'Predict Chiller Load',
+                  description:
+                      'This feature allows you to retrieve the suggested energy load of chiller plants in real-time. By analyzing various input parameters such as current relative humidity, total plant power, plant efficiency, etc, the system provides an accurate prediction of the chiller load needed for optimal performance.',
+                  buttonText: 'Predict',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const InputScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),
