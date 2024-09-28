@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grundfos/home_page.dart';
-import 'package:grundfos/screens/welcome.dart'; // Import the welcome screen
+import 'package:grundfos/screens/welcome.dart';
 
 class Togglescreen extends StatefulWidget {
   const Togglescreen({super.key});
@@ -17,7 +17,7 @@ class _TogglescreenState extends State<Togglescreen> {
 
   void switchScreen() {
     setState(() {
-      activeScreen = 'welcome_screen'; // Update to welcome screen
+      activeScreen = 'welcome_screen';
     });
   }
 

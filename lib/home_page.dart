@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(context) {
     return Center(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 50), // Added margin
+        margin: const EdgeInsets.symmetric(horizontal: 50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
               height: 20,
             ),
             Text(
-              "Chiller Load Prediction System", // Center the text
+              "Chiller Load Prediction System",
               style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
