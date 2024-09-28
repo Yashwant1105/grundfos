@@ -14,8 +14,8 @@ class WelcomeScreen extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Image.network(
-            "https://i.ibb.co/hWqbfFs/grundfos-logo-1.png",
+          title: TwinklingImage(
+            imageUrl: "https://i.ibb.co/hWqbfFs/grundfos-logo-1.png",
             width: 180,
           ),
           centerTitle: false,
@@ -33,6 +33,50 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: const BottomNavBar(),
+      ),
+    );
+  }
+}
+
+class TwinklingImage extends StatefulWidget {
+  final String imageUrl;
+  final double width;
+
+  const TwinklingImage(
+      {required this.imageUrl, required this.width, super.key});
+
+  @override
+  _TwinklingImageState createState() => _TwinklingImageState();
+}
+
+class _TwinklingImageState extends State<TwinklingImage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.5, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animation,
+      child: Image.network(
+        widget.imageUrl,
+        width: widget.width,
       ),
     );
   }

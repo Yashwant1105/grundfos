@@ -18,6 +18,8 @@ class HomePage extends StatelessWidget {
             ),
             Image.network(
               "https://i.ibb.co/hWqbfFs/grundfos-logo-1.png",
+              height: 24,
+              width: 200,
               // cacheWidth: 800,
               // cacheHeight: 800,
               color: const Color.fromARGB(255, 255, 255, 255),
