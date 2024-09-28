@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grundfos/screens/input_screen.dart';
+import 'package:http/http.dart' as http;
 
 class PredictScreen extends StatefulWidget {
   final String tonnage;
@@ -12,7 +15,7 @@ class PredictScreen extends StatefulWidget {
   final String flow;
 
   const PredictScreen({
-    Key? key,
+    super.key,
     required this.tonnage,
     required this.totalPower,
     required this.efficiency,
@@ -20,7 +23,7 @@ class PredictScreen extends StatefulWidget {
     required this.presentLoad,
     required this.humidity,
     required this.flow,
-  }) : super(key: key);
+  });
 
   @override
   _PredictScreenState createState() => _PredictScreenState();
@@ -29,6 +32,7 @@ class PredictScreen extends StatefulWidget {
 class _PredictScreenState extends State<PredictScreen>
     with SingleTickerProviderStateMixin {
   bool isLoading = false;
+  double predictionResult = -1.0;
   late AnimationController _controller;
   late Animation<Color?> _animation;
 
@@ -43,6 +47,9 @@ class _PredictScreenState extends State<PredictScreen>
       begin: Colors.white,
       end: Colors.transparent,
     ).animate(_controller);
+    fetchPredictions().then((result) {
+      print(result);
+    });
   }
 
   @override
@@ -51,17 +58,43 @@ class _PredictScreenState extends State<PredictScreen>
     super.dispose();
   }
 
-  void refreshPredictions() {
-    setState(() {
-      isLoading = true;
-    });
+  Future<String> fetchPredictions() async {
+    Map<String, dynamic> jsonMap = {
+      "Rt": double.tryParse(widget.tonnage.toString()) ?? 0.0,
+      "kW_Tot": double.tryParse(widget.totalPower.toString()) ?? 0.0,
+      "kW_RT": double.tryParse(widget.chillerPower.toString()) ?? 0.0,
+      "kW_CHH": double.tryParse(widget.efficiency.toString()) ?? 0.0,
+      "Gpm": double.tryParse(widget.flow.toString()) ?? 0.0,
+      "Precent_CH": double.tryParse(widget.presentLoad.toString()) ?? 0.0,
+      "Rh_per": double.tryParse(widget.humidity.toString()) ?? 0.0,
+    };
+    String jsonStinrg = json.encode(jsonMap);
 
-    // Simulate a network call or computation
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    var url = Uri.https('8j0t70j7-8000.inc1.devtunnels.ms', '/predict');
+    print(widget.chillerPower);
+    print(widget.totalPower);
+    print(widget.efficiency);
+    print(widget.presentLoad);
+    print(widget.flow);
+    print(widget.humidity);
+    print(widget.tonnage);
+    print(jsonEncode({
+      "Rt": double.tryParse(widget.tonnage.toString()) ?? 0.0,
+      "kW_Tot": double.tryParse(widget.totalPower.toString()) ?? 0.0,
+      "kW_RT": double.tryParse(widget.chillerPower.toString()) ?? 0.0,
+      "kW_CHH": double.tryParse(widget.efficiency.toString()) ?? 0.0,
+      "Gpm": double.tryParse(widget.flow.toString()) ?? 0.0,
+      "Precent_CH": double.tryParse(widget.presentLoad.toString()) ?? 0.0,
+      "Rh_per": double.tryParse(widget.humidity.toString()) ?? 0.0,
+    }));
+    var response = await http.post(url, body: jsonStinrg);
+    if (response.statusCode == 200) {
+      print(response.body);
+      return response.body;
+    } else {
+      print(response.body);
+      return "error";
+    }
   }
 
   @override
@@ -74,7 +107,7 @@ class _PredictScreenState extends State<PredictScreen>
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF0C2229),
-          title: Row(
+          title: const Row(
             children: [
               TwinklingImage(
                 imageUrl: 'https://i.ibb.co/hWqbfFs/grundfos-logo-1.png',
@@ -99,10 +132,6 @@ class _PredictScreenState extends State<PredictScreen>
                 ),
               ],
             ),
-            if (isLoading)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
           ],
         ),
       ),
@@ -120,7 +149,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
   final String flow;
 
   const ChillerPredictionResultScreen({
-    Key? key,
+    super.key,
     required this.tonnage,
     required this.totalPower,
     required this.efficiency,
@@ -128,7 +157,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
     required this.presentLoad,
     required this.humidity,
     required this.flow,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +174,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                       top: 40.0, bottom: 20, left: 20, right: 20),
                   child: Text(
                     'Prediction Results',
@@ -162,24 +191,25 @@ class ChillerPredictionResultScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.90,
                     // height: MediaQuery.of(context).size.height * 2,
                     decoration: ShapeDecoration(
-                      color: Color(0x8E34322C),
+                      color: const Color(0x8E34322C),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 2, color: Color(0xFF616161)),
+                        side: const BorderSide(
+                            width: 2, color: Color(0xFF616161)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: Column(
                       children: [
                         Padding(
-                          padding:
-                              EdgeInsets.only(top: 50.0, left: 30, right: 10),
+                          padding: const EdgeInsets.only(
+                              top: 50.0, left: 30, right: 10),
                           child: Text.rich(
                             TextSpan(
                               children: [
                                 TextSpan(
                                   text: '50',
                                   style: GoogleFonts.inter(
-                                    color: Color(0xFF63C0F5),
+                                    color: const Color(0xFF63C0F5),
                                     fontSize: 124,
                                     fontWeight: FontWeight.w800,
                                     height: 1,
@@ -216,7 +246,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
                           height: 20,
                         ),
                         Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: Text(
                             'Data Provided',
                             style: GoogleFonts.inter(
@@ -229,7 +259,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(top: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -272,13 +302,13 @@ class ChillerPredictionResultScreen extends StatelessWidget {
                               shape: ContinuousRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               alignment: Alignment.center,
-                              backgroundColor: Color(0xFF63C0F5),
+                              backgroundColor: const Color(0xFF63C0F5),
                             ),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => InputScreen()),
+                                    builder: (context) => const InputScreen()),
                               );
                             },
                             label: Text(
@@ -290,7 +320,7 @@ class ChillerPredictionResultScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 12,
                         ),
                       ],
@@ -315,6 +345,7 @@ class TwinklingImage extends StatefulWidget {
   final double width;
 
   const TwinklingImage({
+    super.key,
     required this.imageUrl,
     required this.height,
     required this.width,
@@ -364,14 +395,14 @@ class DataRow extends StatelessWidget {
   final String value;
 
   const DataRow({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.39,
       height: 50,
       child: Column(
